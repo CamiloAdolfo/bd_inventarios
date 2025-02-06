@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -89,7 +89,9 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
       </div>
 
       <Table>
-        <TableHeader className="table-header">
+        <TableHead className="table-header">
+          {" "}
+          {/* Fixed: Added TableHead */}
           <TableRow>
             <TableHead className="w-[50px] text-white">#</TableHead>
             {["nombre", "comuna", "direccion", "barrio", "entidad_administra", "administrador", "celular"].map(
@@ -107,12 +109,13 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
               ),
             )}
           </TableRow>
-        </TableHeader>
+        </TableHead>{" "}
+        {/* Fixed: Added closing TableHead */}
         <TableBody>
           {sortedEscenarios.map((escenario, index) => (
             <TableRow
               key={escenario.id}
-              className="cursor-pointer hover:bg-gray-100"
+              className="table-row-hover cursor-pointer"
               onClick={() => router.push(`/escenarios/${escenario.id}`)}
             >
               <TableCell>{index + 1}</TableCell>

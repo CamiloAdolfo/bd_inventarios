@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { MapPin } from "lucide-react"
+import { Card } from "@/components/ui/card"
 import type { Escenario, Item } from "@/types/escenario"
 
 interface EscenarioDetalleProps {
@@ -36,66 +36,68 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">{escenario.nombre}</h1>
-        <div className="space-x-2">
-          <Button variant="secondary" onClick={() => router.push("/")} className="btn-black">
-            Volver
-          </Button>
-        </div>
+        <Button variant="secondary" onClick={() => router.push("/")} className="btn-black">
+          Volver
+        </Button>
       </div>
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Información del Escenario</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-lg p-6 shadow-sm">
-          <div className="space-y-4">
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Nombre:</span>
-              <span>{escenario.nombre}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Susceptible administracion:</span>
-              <span>{escenario.susceptible_administracion}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Barrio:</span>
-              <span>{escenario.barrio}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Entidad administra:</span>
-              <span>{escenario.entidad_administra}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Celular:</span>
-              <span>{escenario.celular}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="info-card">
+            <div className="space-y-4">
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Nombre:</span>
+                <span>{escenario.nombre}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Susceptible administracion:</span>
+                <span>{escenario.susceptible_administracion}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Barrio:</span>
+                <span>{escenario.barrio}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Entidad administra:</span>
+                <span>{escenario.entidad_administra}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Celular:</span>
+                <span>{escenario.celular}</span>
+              </div>
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Comuna:</span>
-              <span>{escenario.comuna}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Direccion:</span>
-              <span>{escenario.direccion}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Georeferenciacion:</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open(escenario.georeferenciacion, "_blank")}
-                className="btn-black"
-              >
-                <MapPin className="h-4 w-4 mr-2" />
-                Ver en mapa
-              </Button>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Administrador:</span>
-              <span>{escenario.administrador}</span>
-            </div>
-            <div className="grid grid-cols-[auto,1fr] gap-2">
-              <span className="font-semibold">Email:</span>
-              <span>{escenario.email}</span>
+          <div className="info-card">
+            <div className="space-y-4">
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Comuna:</span>
+                <span>{escenario.comuna}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Direccion:</span>
+                <span>{escenario.direccion}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Georeferenciacion:</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(escenario.georeferenciacion, "_blank")}
+                  className="w-fit px-3"
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Ver en mapa
+                </Button>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Administrador:</span>
+                <span>{escenario.administrador}</span>
+              </div>
+              <div className="grid grid-cols-[auto,1fr] gap-2">
+                <span className="font-semibold">Email:</span>
+                <span>{escenario.email}</span>
+              </div>
             </div>
           </div>
         </div>
