@@ -1,8 +1,9 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
 import EscenarioDetalle from "./escenario-detalle"
+import type { Escenario, Item } from "@/types/escenario"
 
-async function getEscenario(id: string) {
+async function getEscenario(id: string): Promise<Escenario | null> {
   const { data: escenario, error: errorEscenario } = await supabase.from("escenarios").select("*").eq("id", id).single()
 
   if (errorEscenario) {
@@ -13,7 +14,7 @@ async function getEscenario(id: string) {
   return escenario
 }
 
-async function getItems(id: string) {
+async function getItems(id: string): Promise<Item[]> {
   const { data: items, error: errorItems } = await supabase.from("items").select("*").eq("escenario_id", id)
 
   if (errorItems) {
@@ -24,9 +25,12 @@ async function getItems(id: string) {
   return items || []
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  // Esperamos a que los parámetros estén disponibles
-  const id = await Promise.resolve(params.id)
+interface PageProps {
+  params: { id: string }
+}
+
+export default async function Page({ params }: PageProps) {
+  const id = params.id
 
   const [escenario, items] = await Promise.all([getEscenario(id), getItems(id)])
 

@@ -3,11 +3,12 @@
 import { useState, useMemo } from "react"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, FileSpreadsheet } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "./SearchBar"
 import { ComboboxFilter } from "./ComboboxFilter"
 import type { Escenario, Item, FilterState } from "@/types/escenario"
+import { exportToExcel } from "@/utils/export"
 
 interface EscenariosTableProps {
   escenarios: Escenario[]
@@ -39,12 +40,10 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
 
   const filteredEscenarios = useMemo(() => {
     return escenarios.filter((escenario) => {
-      // Filtro de búsqueda
       const matchesSearch = Object.values(escenario).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase()),
       )
 
-      // Filtros de escenario
       const matchesEscenarioFilters = Object.entries(filters.escenario).every(([key, value]) => {
         if (!value) return true
         return String(escenario[key as keyof Escenario])
@@ -52,7 +51,6 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
           .includes(value.toLowerCase())
       })
 
-      // Filtros de items
       const escenarioItems = items.filter((item) => item.escenario_id === escenario.id)
       const matchesItemFilters =
         filters.items.length === 0 ||
@@ -93,8 +91,7 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
   }
 
   const handleExportExcel = () => {
-    // Implementar lógica para exportar a Excel
-    console.log("Exportar a Excel")
+    exportToExcel(sortedEscenarios, items)
   }
 
   return (
@@ -110,23 +107,20 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
             onSelect={(value) =>
               setFilters((prev) => ({
                 ...prev,
-                escenario: { ...prev.escenario, [key]: value },
+                escenario: { ...prev.escenario, [key]: value ? [value] : [] },
               }))
             }
+            selectedItems={filters.escenario[key] || []}
           />
         ))}
         <ComboboxFilter
           options={uniqueItemNames}
           placeholder="Filtro por equipamientos"
           onSelect={(value) => {
-            if (value) {
-              setFilters((prev) => ({
-                ...prev,
-                items: prev.items.includes(value)
-                  ? prev.items.filter((item) => item !== value)
-                  : [...prev.items, value],
-              }))
-            }
+            setFilters((prev) => ({
+              ...prev,
+              items: prev.items.includes(value) ? prev.items.filter((item) => item !== value) : [...prev.items, value],
+            }))
           }}
           isMulti
           selectedItems={filters.items}
@@ -135,7 +129,7 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
 
       <div className="flex justify-end gap-2 mb-4">
         <Button onClick={handleExportExcel} className="btn-black">
-          Exportar a Excel
+          <FileSpreadsheet className="h-4 w-4" />
         </Button>
       </div>
 

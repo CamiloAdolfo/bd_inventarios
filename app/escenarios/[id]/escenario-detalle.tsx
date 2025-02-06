@@ -3,9 +3,10 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { MapPin } from "lucide-react"
+import { MapPin, FileText } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import type { Escenario, Item } from "@/types/escenario"
+import { exportToPDF } from "@/utils/export"
 
 interface EscenarioDetalleProps {
   escenario: Escenario
@@ -32,13 +33,22 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
     }
   }
 
+  const handleExportPDF = () => {
+    exportToPDF(escenario, items)
+  }
+
   return (
     <div className="container mx-auto px-4 py-6 lg:px-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">{escenario.nombre}</h1>
-        <Button variant="secondary" onClick={() => router.push("/")} className="btn-black">
-          Volver
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={() => router.push("/")} className="btn-black">
+            Volver
+          </Button>
+          <Button variant="secondary" onClick={handleExportPDF} className="btn-black">
+            <FileText className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="mb-8">

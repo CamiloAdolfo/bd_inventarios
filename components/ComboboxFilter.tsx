@@ -22,7 +22,15 @@ export function ComboboxFilter({
   selectedItems = [],
 }: ComboboxFilterProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+
+  const handleSelect = (option: string) => {
+    if (isMulti) {
+      onSelect(option)
+    } else {
+      onSelect(option)
+      setOpen(false)
+    }
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -32,52 +40,24 @@ export function ComboboxFilter({
             ? selectedItems.length === 0
               ? placeholder
               : `${selectedItems.length} seleccionados`
-            : value || placeholder}
+            : selectedItems[0] || placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 filter-content">
+      <PopoverContent className="w-full p-0 filter-content bg-white">
         <Command>
           <CommandInput placeholder={`Buscar...`} />
           <CommandList>
             <CommandEmpty>No se encontraron resultados.</CommandEmpty>
             <CommandGroup>
               {!isMulti && (
-                <CommandItem
-                  onSelect={() => {
-                    setValue("")
-                    onSelect("")
-                    setOpen(false)
-                  }}
-                >
-                  <Check className={!value ? "opacity-100 mr-2" : "opacity-0 mr-2"} size={16} />
+                <CommandItem onSelect={() => handleSelect("")}>
+                  <Check className={selectedItems.length === 0 ? "opacity-100 mr-2" : "opacity-0 mr-2"} size={16} />
                   Mostrar todos
                 </CommandItem>
               )}
               {options.map((option) => (
-                <CommandItem
-                  key={option}
-                  onSelect={() => {
-                    if (isMulti) {
-                      onSelect(option)
-                    } else {
-                      setValue(option)
-                      onSelect(option)
-                      setOpen(false)
-                    }
-                  }}
-                >
-                  <Check
-                    className={
-                      isMulti
-                        ? selectedItems.includes(option)
-                          ? "opacity-100 mr-2"
-                          : "opacity-0 mr-2"
-                        : value === option
-                          ? "opacity-100 mr-2"
-                          : "opacity-0 mr-2"
-                    }
-                    size={16}
-                  />
+                <CommandItem key={option} onSelect={() => handleSelect(option)}>
+                  <Check className={selectedItems.includes(option) ? "opacity-100 mr-2" : "opacity-0 mr-2"} size={16} />
                   {option}
                 </CommandItem>
               ))}
