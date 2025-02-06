@@ -7,7 +7,6 @@ import { ArrowUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "./SearchBar"
 import { ComboboxFilter } from "./ComboboxFilter"
-import { ItemsFilter } from "./ItemsFilter"
 import type { Escenario, Item, FilterState } from "@/types/escenario"
 
 interface EscenariosTableProps {
@@ -93,11 +92,16 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
     return translations[name] || name
   }
 
+  const handleExportExcel = () => {
+    // Implementar lógica para exportar a Excel
+    console.log("Exportar a Excel")
+  }
+
   return (
     <div className="space-y-4">
       <SearchBar onSearch={setSearchTerm} />
 
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
         {filterColumns.map((key) => (
           <ComboboxFilter
             key={key}
@@ -111,22 +115,37 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
             }
           />
         ))}
-        <div className="md:col-span-3">
-          <ItemsFilter
-            items={uniqueItemNames}
-            selectedItems={filters.items}
-            onSelectItems={(items) => setFilters((prev) => ({ ...prev, items }))}
-          />
-        </div>
+        <ComboboxFilter
+          options={uniqueItemNames}
+          placeholder="Filtro por equipamientos"
+          onSelect={(value) => {
+            if (value) {
+              setFilters((prev) => ({
+                ...prev,
+                items: prev.items.includes(value)
+                  ? prev.items.filter((item) => item !== value)
+                  : [...prev.items, value],
+              }))
+            }
+          }}
+          isMulti
+          selectedItems={filters.items}
+        />
+      </div>
+
+      <div className="flex justify-end gap-2 mb-4">
+        <Button onClick={handleExportExcel} className="btn-black">
+          Exportar a Excel
+        </Button>
       </div>
 
       <Table>
         <TableHeader>
-          <TableRow className="table-header">
-            <TableCell className="font-medium text-white">#</TableCell>
+          <TableRow>
+            <TableCell className="header-cell">#</TableCell>
             {["nombre", "comuna", "direccion", "barrio", "entidad_administra", "administrador", "celular"].map(
               (key) => (
-                <TableCell key={key} className="font-medium text-white">
+                <TableCell key={key} className="header-cell">
                   <Button
                     variant="ghost"
                     onClick={() => handleSort(key as keyof Escenario)}

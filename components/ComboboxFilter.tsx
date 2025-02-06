@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Check } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -11,9 +10,17 @@ interface ComboboxFilterProps {
   options: string[]
   placeholder: string
   onSelect: (value: string) => void
+  isMulti?: boolean
+  selectedItems?: string[]
 }
 
-export function ComboboxFilter({ options, placeholder, onSelect }: ComboboxFilterProps) {
+export function ComboboxFilter({
+  options,
+  placeholder,
+  onSelect,
+  isMulti = false,
+  selectedItems = [],
+}: ComboboxFilterProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -21,35 +28,56 @@ export function ComboboxFilter({ options, placeholder, onSelect }: ComboboxFilte
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between btn-black">
-          {value || placeholder}
+          {isMulti
+            ? selectedItems.length === 0
+              ? placeholder
+              : `${selectedItems.length} seleccionados`
+            : value || placeholder}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0 filter-content">
         <Command>
-          <CommandInput placeholder={`Buscar ${placeholder.toLowerCase()}...`} />
+          <CommandInput placeholder={`Buscar...`} />
           <CommandList>
             <CommandEmpty>No se encontraron resultados.</CommandEmpty>
             <CommandGroup>
-              <CommandItem
-                onSelect={() => {
-                  setValue("")
-                  onSelect("")
-                  setOpen(false)
-                }}
-              >
-                <Check className={cn("mr-2 h-4 w-4", !value ? "opacity-100" : "opacity-0")} />
-                Mostrar todos
-              </CommandItem>
+              {!isMulti && (
+                <CommandItem
+                  onSelect={() => {
+                    setValue("")
+                    onSelect("")
+                    setOpen(false)
+                  }}
+                >
+                  <Check className={!value ? "opacity-100 mr-2" : "opacity-0 mr-2"} size={16} />
+                  Mostrar todos
+                </CommandItem>
+              )}
               {options.map((option) => (
                 <CommandItem
                   key={option}
                   onSelect={() => {
-                    setValue(option)
-                    onSelect(option)
-                    setOpen(false)
+                    if (isMulti) {
+                      onSelect(option)
+                    } else {
+                      setValue(option)
+                      onSelect(option)
+                      setOpen(false)
+                    }
                   }}
                 >
-                  <Check className={cn("mr-2 h-4 w-4", value === option ? "opacity-100" : "opacity-0")} />
+                  <Check
+                    className={
+                      isMulti
+                        ? selectedItems.includes(option)
+                          ? "opacity-100 mr-2"
+                          : "opacity-0 mr-2"
+                        : value === option
+                          ? "opacity-100 mr-2"
+                          : "opacity-0 mr-2"
+                    }
+                    size={16}
+                  />
                   {option}
                 </CommandItem>
               ))}

@@ -16,7 +16,7 @@
   }
 
   .filter-content {
-    @apply bg-white rounded-lg shadow-md;
+    @apply bg-white rounded-lg shadow-md border;
   }
 
   .info-card {
@@ -33,6 +33,14 @@
 
   .search-bar {
     @apply w-1/2 mx-auto;
+  }
+
+  .search-input {
+    @apply rounded-full border-gray-200 shadow-sm hover:border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50;
+  }
+
+  .header-cell {
+    @apply bg-[#1e1e1e] text-white font-medium;
   }
 }
 
