@@ -46,14 +46,14 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
             Volver
           </Button>
           <Button variant="secondary" onClick={handleExportPDF} className="btn-black">
-            <FileText className="h-4 w-4" />
+            <FileText className="h-4 w-4 text-red-500" />
           </Button>
         </div>
       </div>
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Información del Escenario</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="info-card">
             <div className="space-y-4">
               <div className="grid grid-cols-[auto,1fr] gap-2">

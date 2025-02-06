@@ -46,9 +46,8 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
 
       const matchesEscenarioFilters = Object.entries(filters.escenario).every(([key, value]) => {
         if (!value) return true
-        return String(escenario[key as keyof Escenario])
-          .toLowerCase()
-          .includes(value.toLowerCase())
+        const escenarioValue = String(escenario[key as keyof Escenario]).toLowerCase()
+        return escenarioValue.includes(String(value).toLowerCase())
       })
 
       const escenarioItems = items.filter((item) => item.escenario_id === escenario.id)
@@ -129,7 +128,7 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
 
       <div className="flex justify-end gap-2 mb-4">
         <Button onClick={handleExportExcel} className="btn-black">
-          <FileSpreadsheet className="h-4 w-4" />
+          <FileSpreadsheet className="h-4 w-4 text-green-500" />
         </Button>
       </div>
 
