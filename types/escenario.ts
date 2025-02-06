@@ -5,6 +5,7 @@ export interface Item {
   seccion: string
   estado: string
   escenario_id: number
+  tipo?: string
 }
 
 export interface Escenario {
@@ -19,5 +20,11 @@ export interface Escenario {
   administrador: string
   celular: string
   email: string
+  items?: Item[]
+}
+
+export interface FilterState {
+  escenario: Record<string, string>
+  items: string[]
 }
 

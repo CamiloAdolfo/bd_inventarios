@@ -2,41 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-.table-header {
-  background-color: #1e1e1e;
-  color: white;
-}
+@layer components {
+  .table-header {
+    @apply bg-[#1e1e1e] text-white;
+  }
 
-.btn-black {
-  background-color: #1e1e1e !important;
-  color: white !important;
-}
+  .btn-black {
+    @apply bg-[#1e1e1e] text-white hover:bg-[#2d2d2d] !important;
+  }
 
-.btn-black:hover {
-  background-color: #2d2d2d !important;
-}
+  .filter-card {
+    @apply rounded-lg bg-[#1e1e1e] text-white shadow-sm hover:shadow-md transition-all;
+  }
 
-.filter-card {
-  @apply rounded-lg bg-[#1e1e1e] text-white shadow-sm hover:shadow-md transition-all;
-}
+  .filter-content {
+    @apply bg-white rounded-lg shadow-md;
+  }
 
-.filter-content {
-  @apply bg-white rounded-lg shadow-md;
-}
+  .info-card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6;
+  }
 
-.info-card {
-  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6;
-}
+  .table-row-hover {
+    @apply hover:bg-blue-50/50 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 cursor-pointer;
+  }
 
-.table-row-hover {
-  @apply hover:bg-blue-50/50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
-}
+  .search-container {
+    @apply flex justify-center mb-6;
+  }
 
-.search-container {
-  @apply flex justify-center mb-6;
-}
-
-.search-bar {
-  @apply w-1/2 mx-auto;
+  .search-bar {
+    @apply w-1/2 mx-auto;
+  }
 }
 

@@ -7,20 +7,28 @@ import { ArrowUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "./SearchBar"
 import { ComboboxFilter } from "./ComboboxFilter"
-import type { Escenario } from "@/types/escenario"
+import { ItemsFilter } from "./ItemsFilter"
+import type { Escenario, Item, FilterState } from "@/types/escenario"
 
 interface EscenariosTableProps {
   escenarios: Escenario[]
+  items: Item[]
 }
 
-export function EscenariosTable({ escenarios }: EscenariosTableProps) {
+export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
-  const [filters, setFilters] = useState<Record<string, string>>({})
+  const [filters, setFilters] = useState<FilterState>({
+    escenario: {},
+    items: [],
+  })
   const [sortConfig, setSortConfig] = useState<{ key: keyof Escenario; direction: "asc" | "desc" } | null>(null)
 
-  // Columnas permitidas para filtrar
   const filterColumns = ["comuna", "barrio", "entidad_administra", "administrador"]
+
+  const uniqueItemNames = useMemo(() => {
+    return Array.from(new Set(items.map((item) => item.nombre)))
+  }, [items])
 
   const handleSort = (key: keyof Escenario) => {
     let direction: "asc" | "desc" = "asc"
@@ -32,20 +40,30 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
 
   const filteredEscenarios = useMemo(() => {
     return escenarios.filter((escenario) => {
+      // Filtro de búsqueda
       const matchesSearch = Object.values(escenario).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase()),
       )
 
-      const matchesFilters = Object.entries(filters).every(([key, value]) => {
-        if (!value || value === "mostrar_todos") return true
+      // Filtros de escenario
+      const matchesEscenarioFilters = Object.entries(filters.escenario).every(([key, value]) => {
+        if (!value) return true
         return String(escenario[key as keyof Escenario])
           .toLowerCase()
           .includes(value.toLowerCase())
       })
 
-      return matchesSearch && matchesFilters
+      // Filtros de items
+      const escenarioItems = items.filter((item) => item.escenario_id === escenario.id)
+      const matchesItemFilters =
+        filters.items.length === 0 ||
+        filters.items.some((filterItem) =>
+          escenarioItems.some((item) => item.nombre.toLowerCase() === filterItem.toLowerCase()),
+        )
+
+      return matchesSearch && matchesEscenarioFilters && matchesItemFilters
     })
-  }, [escenarios, searchTerm, filters])
+  }, [escenarios, items, searchTerm, filters])
 
   const sortedEscenarios = useMemo(() => {
     if (!sortConfig) return filteredEscenarios
@@ -59,7 +77,7 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
   }, [filteredEscenarios, sortConfig])
 
   const uniqueValues = (key: keyof Escenario) => {
-    return Array.from(new Set(escenarios.map((e) => e[key])))
+    return Array.from(new Set(escenarios.map((e) => String(e[key]))))
   }
 
   const translateColumnName = (name: string) => {
@@ -79,20 +97,32 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
     <div className="space-y-4">
       <SearchBar onSearch={setSearchTerm} />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 mb-4">
         {filterColumns.map((key) => (
           <ComboboxFilter
             key={key}
             options={uniqueValues(key as keyof Escenario)}
             placeholder={translateColumnName(key)}
-            onSelect={(value) => setFilters((prev) => ({ ...prev, [key]: value }))}
+            onSelect={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                escenario: { ...prev.escenario, [key]: value },
+              }))
+            }
           />
         ))}
+        <div className="md:col-span-3">
+          <ItemsFilter
+            items={uniqueItemNames}
+            selectedItems={filters.items}
+            onSelectItems={(items) => setFilters((prev) => ({ ...prev, items }))}
+          />
+        </div>
       </div>
 
       <Table>
-        <TableHeader className="table-header">
-          <TableRow>
+        <TableHeader>
+          <TableRow className="table-header">
             <TableCell className="font-medium text-white">#</TableCell>
             {["nombre", "comuna", "direccion", "barrio", "entidad_administra", "administrador", "celular"].map(
               (key) => (
@@ -114,7 +144,7 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
           {sortedEscenarios.map((escenario, index) => (
             <TableRow
               key={escenario.id}
-              className="table-row-hover cursor-pointer"
+              className="table-row-hover"
               onClick={() => router.push(`/escenarios/${escenario.id}`)}
             >
               <TableCell>{index + 1}</TableCell>

@@ -3,26 +3,31 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { EscenariosTable } from "./EscenariosTable"
+import type { Escenario, Item } from "@/types/escenario"
 
 export default function EscenariosClient() {
-  const [escenarios, setEscenarios] = useState([])
+  const [escenarios, setEscenarios] = useState<Escenario[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchEscenarios()
+    fetchData()
   }, [])
 
-  async function fetchEscenarios() {
+  async function fetchData() {
     try {
       setLoading(true)
-      const { data, error } = await supabase.from("escenarios").select("*")
+      const [{ data: escenariosData, error: escenariosError }, { data: itemsData, error: itemsError }] =
+        await Promise.all([supabase.from("escenarios").select("*"), supabase.from("items").select("*")])
 
-      if (error) throw error
+      if (escenariosError) throw escenariosError
+      if (itemsError) throw itemsError
 
-      setEscenarios(data || [])
+      setEscenarios(escenariosData || [])
+      setItems(itemsData || [])
     } catch (error) {
-      setError(error.message)
+      setError(error instanceof Error ? error.message : "Error desconocido")
     } finally {
       setLoading(false)
     }
@@ -31,6 +36,6 @@ export default function EscenariosClient() {
   if (loading) return <div>Cargando...</div>
   if (error) return <div>Error: {error}</div>
 
-  return <EscenariosTable escenarios={escenarios} />
+  return <EscenariosTable escenarios={escenarios} items={items} />
 }
 
