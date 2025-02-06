@@ -17,11 +17,15 @@
 }
 
 .filter-card {
-  @apply rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all;
+  @apply rounded-lg bg-[#1e1e1e] text-white shadow-sm hover:shadow-md transition-all;
+}
+
+.filter-content {
+  @apply bg-white rounded-lg shadow-md;
 }
 
 .info-card {
-  @apply bg-white rounded-lg shadow-sm hover:shadow-md transition-all p-6;
+  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6;
 }
 
 .table-row-hover {

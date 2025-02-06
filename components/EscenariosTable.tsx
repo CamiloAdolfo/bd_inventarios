@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -33,12 +33,14 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
   const filteredEscenarios = useMemo(() => {
     return escenarios.filter((escenario) => {
       const matchesSearch = Object.values(escenario).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase()),
+        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
       )
 
       const matchesFilters = Object.entries(filters).every(([key, value]) => {
         if (!value || value === "mostrar_todos") return true
-        return escenario[key as keyof Escenario].toString().toLowerCase().includes(value.toLowerCase())
+        return String(escenario[key as keyof Escenario])
+          .toLowerCase()
+          .includes(value.toLowerCase())
       })
 
       return matchesSearch && matchesFilters
@@ -89,14 +91,12 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
       </div>
 
       <Table>
-        <TableHead className="table-header">
-          {" "}
-          {/* Fixed: Added TableHead */}
+        <TableHeader className="table-header">
           <TableRow>
-            <TableHead className="w-[50px] text-white">#</TableHead>
+            <TableCell className="font-medium text-white">#</TableCell>
             {["nombre", "comuna", "direccion", "barrio", "entidad_administra", "administrador", "celular"].map(
               (key) => (
-                <TableHead key={key} className="text-white">
+                <TableCell key={key} className="font-medium text-white">
                   <Button
                     variant="ghost"
                     onClick={() => handleSort(key as keyof Escenario)}
@@ -105,12 +105,11 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
                     {translateColumnName(key)}
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </Button>
-                </TableHead>
+                </TableCell>
               ),
             )}
           </TableRow>
-        </TableHead>{" "}
-        {/* Fixed: Added closing TableHead */}
+        </TableHeader>
         <TableBody>
           {sortedEscenarios.map((escenario, index) => (
             <TableRow

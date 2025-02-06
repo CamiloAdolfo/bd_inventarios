@@ -33,8 +33,8 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="container mx-auto px-4 py-6 lg:px-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">{escenario.nombre}</h1>
         <Button variant="secondary" onClick={() => router.push("/")} className="btn-black">
           Volver
@@ -43,7 +43,7 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Información del Escenario</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="info-card">
             <div className="space-y-4">
               <div className="grid grid-cols-[auto,1fr] gap-2">
@@ -84,7 +84,7 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
                   variant="outline"
                   size="sm"
                   onClick={() => window.open(escenario.georeferenciacion, "_blank")}
-                  className="w-fit px-3"
+                  className="btn-black w-fit px-3 py-1 text-sm"
                 >
                   <MapPin className="h-4 w-4 mr-2" />
                   Ver en mapa
@@ -105,7 +105,7 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Inmuebles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {inmuebles.map((item, index) => (
             <Card key={index} className="p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
               <h3 className="font-semibold mb-2">{item.nombre}</h3>
@@ -118,7 +118,7 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
 
       <div>
         <h2 className="text-xl font-semibold mb-4">Muebles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {muebles.map((item, index) => (
             <Card key={index} className="p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
               <h3 className="font-semibold mb-2">{item.nombre}</h3>
