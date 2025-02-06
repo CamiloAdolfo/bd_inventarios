@@ -7,19 +7,7 @@ import { ArrowUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "./SearchBar"
 import { ComboboxFilter } from "./ComboboxFilter"
-
-interface Escenario {
-  id: number
-  nombre: string
-  susceptible_administracion: string
-  comuna: string
-  direccion: string
-  barrio: string
-  georeferenciacion: string
-  entidad_administra: string
-  administrador: string
-  celular: string
-}
+import type { Escenario } from "@/types/escenario"
 
 interface EscenariosTableProps {
   escenarios: Escenario[]
@@ -44,14 +32,12 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
 
   const filteredEscenarios = useMemo(() => {
     return escenarios.filter((escenario) => {
-      // Aplicar búsqueda global
       const matchesSearch = Object.values(escenario).some((value) =>
         value.toString().toLowerCase().includes(searchTerm.toLowerCase()),
       )
 
-      // Aplicar filtros específicos
       const matchesFilters = Object.entries(filters).every(([key, value]) => {
-        if (!value) return true
+        if (!value || value === "mostrar_todos") return true
         return escenario[key as keyof Escenario].toString().toLowerCase().includes(value.toLowerCase())
       })
 
@@ -77,11 +63,9 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
   const translateColumnName = (name: string) => {
     const translations: Record<string, string> = {
       nombre: "Nombre",
-      susceptible_administracion: "Susceptible Administración",
       comuna: "Comuna",
       direccion: "Dirección",
       barrio: "Barrio",
-      georeferenciacion: "Ubicación",
       entidad_administra: "Entidad Administra",
       administrador: "Administrador",
       celular: "Celular",
@@ -105,16 +89,16 @@ export function EscenariosTable({ escenarios }: EscenariosTableProps) {
       </div>
 
       <Table>
-        <TableHeader>
+        <TableHeader className="table-header">
           <TableRow>
-            <TableHead className="w-[50px]">#</TableHead>
+            <TableHead className="w-[50px] text-white">#</TableHead>
             {["nombre", "comuna", "direccion", "barrio", "entidad_administra", "administrador", "celular"].map(
               (key) => (
-                <TableHead key={key}>
+                <TableHead key={key} className="text-white">
                   <Button
                     variant="ghost"
                     onClick={() => handleSort(key as keyof Escenario)}
-                    className="flex items-center"
+                    className="flex items-center text-white hover:text-gray-200"
                   >
                     {translateColumnName(key)}
                     <ArrowUpDown className="ml-2 h-4 w-4" />
