@@ -24,7 +24,7 @@ export interface Escenario {
 }
 
 export interface FilterState {
-  escenario: Record<string, string>
+  escenario: Record<string, string[]>
   items: string[]
 }
 

@@ -20,7 +20,7 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
   const inmuebles = items.filter((item) => item.seccion === "Inmuebles")
   const muebles = items.filter((item) => item.seccion === "Muebles")
 
-  const getEstadoColor = (estado: string) => {
+  const getEstadoColor = (estado: string): string => {
     switch (estado.toLowerCase()) {
       case "bueno":
         return "text-green-600"
