@@ -25,7 +25,10 @@ async function getItems(id: string) {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const [escenario, items] = await Promise.all([getEscenario(params.id), getItems(params.id)])
+  // Esperamos a que los parámetros estén disponibles
+  const id = await Promise.resolve(params.id)
+
+  const [escenario, items] = await Promise.all([getEscenario(id), getItems(id)])
 
   if (!escenario) {
     return <div className="p-4 text-red-500">Escenario no encontrado</div>
