@@ -16,7 +16,7 @@ interface EscenarioDetalleProps {
 
 export default function EscenarioDetalle({ escenario, initialItems }: EscenarioDetalleProps) {
   const router = useRouter()
-  const [items, setItems] = useState<Item[]>(initialItems)
+  const [items] = useState<Item[]>(initialItems)
 
   const inmuebles = items.filter((item) => item.seccion === "Inmuebles")
   const muebles = items.filter((item) => item.seccion === "Muebles")
@@ -34,11 +34,11 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
     }
   }
 
-  const handleExportPDF = () => {
+  const handleExportPDF = (): void => {
     exportToPDF(escenario, items)
   }
 
-  const handleGenerateActa = () => {
+  const handleGenerateActa = (): void => {
     generateActa(escenario, items)
   }
 
