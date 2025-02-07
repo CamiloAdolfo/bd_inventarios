@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, FileSpreadsheet } from "lucide-react"
+import { ArrowUpDown, FileSpreadsheet, MapIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "./SearchBar"
 import { ComboboxFilter } from "./ComboboxFilter"
@@ -129,6 +129,9 @@ export function EscenariosTable({ escenarios, items }: EscenariosTableProps) {
       <div className="flex justify-end gap-2 mb-4">
         <Button onClick={handleExportExcel} className="btn-black">
           <FileSpreadsheet className="h-4 w-4 text-green-500" />
+        </Button>
+        <Button onClick={() => router.push("/mapa")} className="btn-black">
+          <MapIcon className="h-4 w-4 text-green-500" />
         </Button>
       </div>
 
