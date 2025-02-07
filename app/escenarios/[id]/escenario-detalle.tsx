@@ -3,10 +3,11 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { MapPin, FileText } from "lucide-react"
+import { MapPin, FileText, FileIcon as FileWord } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import type { Escenario, Item } from "@/types/escenario"
 import { exportToPDF } from "@/utils/export"
+import { generateActa } from "@/utils/generateDoc"
 
 interface EscenarioDetalleProps {
   escenario: Escenario
@@ -37,6 +38,10 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
     exportToPDF(escenario, items)
   }
 
+  const handleGenerateActa = () => {
+    generateActa(escenario, items)
+  }
+
   return (
     <div className="container mx-auto px-4 py-6 lg:px-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -47,6 +52,9 @@ export default function EscenarioDetalle({ escenario, initialItems }: EscenarioD
           </Button>
           <Button variant="secondary" onClick={handleExportPDF} className="btn-black">
             <FileText className="h-4 w-4 text-red-500" />
+          </Button>
+          <Button variant="secondary" onClick={handleGenerateActa} className="btn-black">
+            <FileWord className="h-4 w-4 text-blue-500" />
           </Button>
         </div>
       </div>
