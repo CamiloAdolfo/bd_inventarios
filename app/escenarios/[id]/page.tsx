@@ -26,7 +26,9 @@ async function getItems(id: string): Promise<Item[]> {
 }
 
 interface PageProps {
-  params: { id: string }
+  params: {
+    id: string
+  }
 }
 
 export default async function Page({ params }: PageProps) {

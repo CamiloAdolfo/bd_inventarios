@@ -1,31 +1,51 @@
 "use client"
+
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 import type { Escenario } from "@/types/escenario"
-import { extractCoordinatesFromUrl } from "@/utils/coordinates"
 
 interface MapViewProps {
   escenarios: Escenario[]
+}
+
+interface Location extends Escenario {
+  coords: [number, number]
 }
 
 export function MapView({ escenarios }: MapViewProps) {
   // Coordenadas de Cali como centro por defecto
   const defaultCenter: [number, number] = [3.4516, -76.532]
 
-  // Filtrar escenarios con coordenadas válidas
+  // Filtrar escenarios con coordenadas válidas y convertir a [lat, lng]
   const locations = escenarios
     .map((escenario) => {
-      const coords = extractCoordinatesFromUrl(escenario.georeferenciacion)
-      return coords
-        ? {
+      try {
+        // Intentar extraer las coordenadas de la URL de Google Maps
+        const url = new URL(escenario.georeferenciacion)
+        const path = url.pathname
+
+        // Buscar coordenadas en el formato común de Google Maps
+        const coords = path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+        if (coords) {
+          return {
             ...escenario,
-            coords,
+            coords: [Number.parseFloat(coords[1]), Number.parseFloat(coords[2])] as [number, number],
           }
-        : null
+        }
+
+        // Si no se encuentran coordenadas, usar las coordenadas por defecto de Cali
+        return {
+          ...escenario,
+          coords: defaultCenter,
+        }
+      } catch (error) {
+        console.error("Error parsing coordinates for:", escenario.nombre)
+        return null
+      }
     })
-    .filter((location): location is Escenario & { coords: [number, number] } => location !== null)
+    .filter((location): location is Location => location !== null)
 
   if (locations.length === 0) {
     return (
